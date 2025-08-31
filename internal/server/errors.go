@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog"
 	"github.com/ziflex/rm-rf-production/pkg/common"
 	"github.com/ziflex/rm-rf-production/pkg/transactions"
 )
@@ -29,8 +28,6 @@ func NewApiErrorFrom(code string, cause error) *ApiError {
 }
 
 func errorHandler(err error, c echo.Context) {
-	log := zerolog.Ctx(c.Request().Context())
-
 	if errors.Is(err, common.ErrNotFound) {
 		c.JSON(404, NewApiErrorFrom("notFound", err))
 	} else if errors.Is(err, common.ErrDuplicate) {
@@ -40,7 +37,6 @@ func errorHandler(err error, c echo.Context) {
 	} else if he, ok := err.(*echo.HTTPError); ok {
 		c.JSON(he.Code, NewApiError("badRequest", he.Message.(string)))
 	} else {
-		log.Err(err).Msg("internal server error")
-		c.JSON(500, echo.Map{"error": "internal server error"})
+		c.JSON(500, NewApiError("internalError", "internal server error"))
 	}
 }

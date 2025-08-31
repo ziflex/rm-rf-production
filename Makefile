@@ -13,7 +13,7 @@ compile:
 	./main.go
 
 generate:
-	oapi-codegen -config ./api/oapi-codegen.yaml -o ./internal/api/api.gen.go ./api/openapi.yaml
+	oapi-codegen -config ./spec/oapi-codegen.yaml -o ./internal/api/api.gen.go ./spec/openapi.yaml
 
 install-tools:
 	go install honnef.co/go/tools/cmd/staticcheck@latest && \
@@ -27,7 +27,7 @@ install-packages:
 install: install-tools install-packages
 
 test:
-	go test ./
+	go test ./internal/... ./pkg/...
 
 start:
 	${DIR_BIN}/${APP_NAME}

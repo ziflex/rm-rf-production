@@ -7,16 +7,23 @@ import (
 	"github.com/ziflex/dbx"
 )
 
-type Service struct {
-	db         dbx.Database
-	repository Repository
+type (
+	Service interface {
+		CreateAccount(ctx context.Context, creation AccountCreation) (Account, error)
+		GetAccountByID(ctx context.Context, id int64) (Account, error)
+	}
+
+	serviceImpl struct {
+		db         dbx.Database
+		repository Repository
+	}
+)
+
+func NewService(db dbx.Database, repository Repository) Service {
+	return &serviceImpl{db, repository}
 }
 
-func NewService(db dbx.Database, repository Repository) *Service {
-	return &Service{db, repository}
-}
-
-func (s *Service) CreateAccount(ctx context.Context, creation AccountCreation) (Account, error) {
+func (s *serviceImpl) CreateAccount(ctx context.Context, creation AccountCreation) (Account, error) {
 	log := zerolog.Ctx(ctx)
 	log.Info().Msg("creating account")
 
@@ -35,7 +42,7 @@ func (s *Service) CreateAccount(ctx context.Context, creation AccountCreation) (
 	})
 }
 
-func (s *Service) GetAccountByID(ctx context.Context, id int64) (Account, error) {
+func (s *serviceImpl) GetAccountByID(ctx context.Context, id int64) (Account, error) {
 	log := zerolog.Ctx(ctx)
 	log.Info().Int64("id", id).Msg("getting account")
 

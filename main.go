@@ -1,7 +1,6 @@
 package main
 
 import (
-	"embed"
 	"fmt"
 	"io/fs"
 	"os"
@@ -13,13 +12,8 @@ import (
 	"github.com/ziflex/rm-rf-production/internal/server"
 	"github.com/ziflex/rm-rf-production/pkg/accounts"
 	"github.com/ziflex/rm-rf-production/pkg/transactions"
+	"github.com/ziflex/rm-rf-production/spec"
 )
-
-//go:embed api/openapi.yaml
-var specFile []byte
-
-//go:embed api/ui/*
-var uiFS embed.FS
 
 type Config struct {
 	Port     int           `env:"PORT" envDefault:"8080"`
@@ -39,7 +33,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	uiSub, err := fs.Sub(uiFS, "api/ui")
+	uiSub, err := fs.Sub(spec.UI, "ui")
 
 	if err != nil {
 		fmt.Printf("failed to load embedded ui: %+v\n", err)
@@ -66,7 +60,7 @@ func main() {
 		transactions.NewService(db, database.NewTransactions()),
 	), server.Options{
 		Logger: logger,
-		Spec:   specFile,
+		Spec:   spec.File,
 		UI:     uiSub,
 	})
 

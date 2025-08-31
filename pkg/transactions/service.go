@@ -7,22 +7,28 @@ import (
 	"github.com/ziflex/dbx"
 )
 
-type Service struct {
-	db         dbx.Database
-	repository Repository
-}
+type (
+	Service interface {
+		CreateTransaction(ctx context.Context, creation TransactionCreation) (Transaction, error)
+	}
+
+	serviceImpl struct {
+		db         dbx.Database
+		repository Repository
+	}
+)
 
 func NewService(
 	db dbx.Database,
 	repository Repository,
-) *Service {
-	return &Service{
+) Service {
+	return &serviceImpl{
 		db:         db,
 		repository: repository,
 	}
 }
 
-func (s *Service) CreateTransaction(ctx context.Context, creation TransactionCreation) (Transaction, error) {
+func (s *serviceImpl) CreateTransaction(ctx context.Context, creation TransactionCreation) (Transaction, error) {
 	log := zerolog.Ctx(ctx)
 	log.Info().Msg("creating transaction")
 
@@ -52,7 +58,7 @@ func (s *Service) CreateTransaction(ctx context.Context, creation TransactionCre
 	})
 }
 
-func (s *Service) handleOperation(op OperationType, amount float64) (float64, error) {
+func (s *serviceImpl) handleOperation(op OperationType, amount float64) (float64, error) {
 	switch op {
 	case OperationTypePurchase, OperationTypeInstallmentPurchase, OperationTypeWithdrawal:
 		return -amount, nil

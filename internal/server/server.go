@@ -84,3 +84,7 @@ func NewServer(handler api.StrictServerInterface, opts Options) (*Server, error)
 func (svr *Server) Run(port int) error {
 	return svr.engine.Start(fmt.Sprintf("0.0.0.0:%d", port))
 }
+
+func (svr *Server) Shutdown() error {
+	return svr.engine.Shutdown(nil)
+}

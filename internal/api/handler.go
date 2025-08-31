@@ -8,13 +8,13 @@ import (
 )
 
 type Handler struct {
-	accounts     *accounts.Service
-	transactions *transactions.Service
+	accounts     accounts.Service
+	transactions transactions.Service
 }
 
 func NewHandler(
-	accounts *accounts.Service,
-	transactions *transactions.Service,
+	accounts accounts.Service,
+	transactions transactions.Service,
 ) StrictServerInterface {
 	return &Handler{
 		accounts,
