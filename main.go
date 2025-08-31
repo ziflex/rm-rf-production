@@ -62,7 +62,7 @@ func main() {
 	}
 
 	svr, err := server.NewServer(api.NewHandler(
-		accounts.NewService(db, database.NewAccounts()),
+		accounts.NewService(db, database.NewAccountsRepository()),
 		transactions.NewService(db, database.NewTransactions()),
 	), server.Options{
 		Logger: logger,

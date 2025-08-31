@@ -9,14 +9,14 @@ import (
 	"github.com/ziflex/rm-rf-production/pkg/transactions"
 )
 
-type Transactions struct {
+type TransactionsRepository struct {
 }
 
 func NewTransactions() transactions.Repository {
-	return &Transactions{}
+	return &TransactionsRepository{}
 }
 
-func (t *Transactions) CreateTransaction(ctx dbx.Context, tr transactions.TransactionCreation) (transactions.Transaction, error) {
+func (t *TransactionsRepository) CreateTransaction(ctx dbx.Context, tr transactions.TransactionCreation) (transactions.Transaction, error) {
 	row := ctx.Executor().QueryRow(`
 		INSERT INTO transactions (account_id, operation_type, amount) VALUES ($1, $2, $3)
 		RETURNING id, account_id, operation_type, amount, event_date
@@ -41,7 +41,7 @@ func (t *Transactions) CreateTransaction(ctx dbx.Context, tr transactions.Transa
 	return res, nil
 }
 
-func (t *Transactions) scanTransaction(row *sql.Row) (transactions.Transaction, error) {
+func (t *TransactionsRepository) scanTransaction(row *sql.Row) (transactions.Transaction, error) {
 	var tr transactions.Transaction
 	var optype string
 

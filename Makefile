@@ -6,11 +6,14 @@ APP_NAME = $(shell basename $(PWD))
 
 default: compile start
 
-build: lint test compile
+build: generate lint test compile
 
 compile:
 	go build -v -o ${DIR_BIN}/${APP_NAME} \
 	./main.go
+
+generate:
+	oapi-codegen -config ./api/oapi-codegen.yaml -o ./internal/api/api.gen.go ./api/openapi.yaml
 
 install-tools:
 	go install honnef.co/go/tools/cmd/staticcheck@latest && \

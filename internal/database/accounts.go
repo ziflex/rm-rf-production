@@ -12,7 +12,7 @@ import (
 type Accounts struct {
 }
 
-func NewAccounts() accounts.Repository {
+func NewAccountsRepository() accounts.Repository {
 	return &Accounts{}
 }
 

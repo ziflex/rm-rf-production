@@ -179,7 +179,7 @@ components:
 
     Transaction:
       type: object
-      required: [transaction_id, account_id, operation_type_id, amount]
+      required: [transaction_id, account_id, operation_type_id, amount, event_date]
       properties:
         transaction_id:
           type: integer

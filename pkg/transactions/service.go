@@ -2,7 +2,6 @@ package transactions
 
 import (
 	"context"
-	"errors"
 
 	"github.com/rs/zerolog"
 	"github.com/ziflex/dbx"
@@ -60,6 +59,6 @@ func (s *Service) handleOperation(op OperationType, amount float64) (float64, er
 	case OperationTypePayment:
 		return +amount, nil
 	default:
-		return 0, errors.New("invalid operation type")
+		return 0, ErrInvalidOperationType
 	}
 }

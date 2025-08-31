@@ -19,7 +19,7 @@ type (
 		AccountID     int64         `json:"account_id" db:"account_id"`
 		OperationType OperationType `json:"operation_type" db:"operation_type"`
 		Amount        float64       `json:"amount" db:"amount"`
-		EventDate     *time.Time    `json:"event_date" db:"event_date"`
+		EventDate     time.Time     `json:"event_date" db:"event_date"`
 	}
 )
 

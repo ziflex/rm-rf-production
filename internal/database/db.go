@@ -1,13 +1,14 @@
 package database
 
 import (
-	"github.com/jmoiron/sqlx"
+	"database/sql"
+
 	_ "github.com/lib/pq"
 	"github.com/ziflex/dbx"
 )
 
 func New(opts Options) (dbx.Database, error) {
-	db, err := sqlx.Open("postgres", toConnectionString(opts))
+	db, err := sql.Open("postgres", toConnectionString(opts))
 
 	if err != nil {
 		return nil, err
