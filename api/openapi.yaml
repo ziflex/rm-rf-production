@@ -1,0 +1,218 @@
+openapi: 3.0.3
+info:
+  title: rm-rf-production
+  description: rm-rf-production
+  version: 1.0.0
+servers:
+  - url: 'https'
+paths:
+  /accounts:
+    post:
+      tags: [Accounts]
+      operationId: createAccount
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountCreateRequest"
+            examples:
+              create:
+                value:
+                  document_number: "12345678900"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+              examples:
+                created:
+                  value:
+                    account_id: 1
+                    document_number: "12345678900"
+        "400":
+          description: Invalid payload
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "409":
+          description: Document number already exists
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /accounts/{accountId}:
+    get:
+      tags: [Accounts]
+      operationId: getAccount
+      summary: Get an account by ID
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: Unique account identifier
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: Account found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+              examples:
+                ok:
+                  value:
+                    account_id: 1
+                    document_number: "12345678900"
+        "400":
+          description: Invalid account ID
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: Account not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /transactions:
+    post:
+      tags: [Transactions]
+      operationId: createTransaction
+      summary: Create a transaction
+      description: >
+        Creates a transaction for the given account and operation type.
+        Purchase, installment purchase, and withdrawal store **negative** amounts.
+        Payments store **positive** amounts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionCreateRequest"
+            examples:
+              payment:
+                value:
+                  account_id: 1
+                  operation_type_id: 4
+                  amount: 123.45
+      responses:
+        "201":
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+              examples:
+                created:
+                  value:
+                    transaction_id: 1
+                    account_id: 1
+                    operation_type_id: 4
+                    amount: 123.45
+                    event_date: "2025-08-30T12:34:56Z"
+        "400":
+          description: Invalid payload
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: Account or operation type not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+components:
+  schemas:
+    AccountCreateRequest:
+      type: object
+      required: [document_number]
+      properties:
+        document_number:
+          type: string
+          description: Unique document number identifying the account owner
+          example: "12345678900"
+
+    Account:
+      type: object
+      required: [account_id, document_number]
+      properties:
+        account_id:
+          type: integer
+          format: int64
+          example: 1
+        document_number:
+          type: string
+          example: "12345678900"
+
+    OperationType:
+      type: integer
+      description: |
+        Operation type identifier.
+        1=PURCHASE, 2=INSTALLMENT PURCHASE, 3=WITHDRAWAL, 4=PAYMENT.
+      enum: [1, 2, 3, 4]
+      example: 4
+
+    TransactionCreateRequest:
+      type: object
+      required: [account_id, operation_type_id, amount]
+      properties:
+        account_id:
+          type: integer
+          format: int64
+          example: 1
+        operation_type_id:
+          $ref: "#/components/schemas/OperationType"
+        amount:
+          type: number
+          format: double
+          description: >
+            For PURCHASE/INSTALLMENT PURCHASE/WITHDRAWAL (1..3) amount should be negative.
+            For PAYMENT (4) amount should be positive.
+          example: 123.45
+
+    Transaction:
+      type: object
+      required: [transaction_id, account_id, operation_type_id, amount]
+      properties:
+        transaction_id:
+          type: integer
+          format: int64
+          example: 1
+        account_id:
+          type: integer
+          format: int64
+          example: 1
+        operation_type_id:
+          $ref: "#/components/schemas/OperationType"
+        amount:
+          type: number
+          format: double
+          example: 123.45
+        event_date:
+          type: string
+          format: date-time
+          description: Server-generated creation timestamp
+          example: "2025-08-30T12:34:56Z"
+
+    Error:
+      type: object
+      required: [message]
+      properties:
+        code:
+          type: string
+          example: "validation_error"
+        message:
+          type: string
+          example: "invalid account_id"
+        details:
+          description: Optional structured error details
+          oneOf:
+            - type: object
+            - type: array
