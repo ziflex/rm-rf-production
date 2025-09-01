@@ -1,9 +1,5 @@
 DIR_BIN = ./bin
-APP_NAME = $(shell basename $(PWD))
-OAPI := $(shell go env GOPATH)/bin/oapi-codegen
-
-export GOOS=linux
-export GOARCH=amd64
+APP_NAME = rm-rf-production
 
 export DB_PORT ?= 5432
 export DB_NAME ?= mydb

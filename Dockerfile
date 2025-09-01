@@ -1,18 +1,15 @@
-FROM golang:1.24-bullseye AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24-trixie AS builder
 
-ENV PATH="/go/bin:${PATH}"
+#ENV PATH="/go/bin:${PATH}"
 ENV CGO_ENABLED=0
-ENV GOOS=linux
-ENV GOARCH=amd64
+ENV PATH="/go/bin:/go/bin/linux_amd64:${PATH}"
 
 WORKDIR /build
 
 COPY . .
 
 # Build dependencies.
-RUN make install
-
-RUN ls -al /go/bin
+RUN make install-tools
 
 # Build code.
 RUN make build
