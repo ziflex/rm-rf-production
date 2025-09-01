@@ -39,11 +39,11 @@ jobs:
       - name: Download dependencies
         run: make install
 
-      - name: Lint
-        run: make lint
-
       - name: Generate code
         run: make generate
+
+      - name: Lint
+        run: make lint
 
       - name: Build
         run: make compile
