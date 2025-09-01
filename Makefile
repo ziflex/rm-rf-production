@@ -32,8 +32,7 @@ install-tools:
 	go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
 
 install-packages:
-	go mod tidy && \
-	go mod vendor
+	go mod download
 
 install: install-tools install-packages
 
