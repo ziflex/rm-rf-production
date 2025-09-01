@@ -54,16 +54,8 @@ func (a *Accounts) GetAccountByID(ctx dbx.Context, id int64) (accounts.Account, 
 
 	defer rows.Close()
 
-	var acc accounts.Account
-
 	if !rows.Next() {
 		return accounts.Account{}, fmt.Errorf("account %w: %d", common.ErrNotFound, id)
-	}
-
-	err = rows.Scan(&acc.ID, &acc.DocumentNumber)
-
-	if err != nil {
-		return accounts.Account{}, err
 	}
 
 	return a.scanAccount(rows)

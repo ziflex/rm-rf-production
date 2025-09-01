@@ -34,6 +34,8 @@ func errorHandler(err error, c echo.Context) {
 		c.JSON(409, NewApiErrorFrom("duplicate", err))
 	} else if errors.Is(err, transactions.ErrInvalidOperationType) {
 		c.JSON(400, NewApiErrorFrom("invalidOperationType", err))
+	} else if errors.Is(err, transactions.ErrInvalidAmount) {
+		c.JSON(400, NewApiErrorFrom("invalidAmount", err))
 	} else if he, ok := err.(*echo.HTTPError); ok {
 		c.JSON(he.Code, NewApiError("badRequest", he.Message.(string)))
 	} else {

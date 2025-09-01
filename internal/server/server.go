@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"io/fs"
 	"net/http"
@@ -68,6 +69,10 @@ func NewServer(handler api.StrictServerInterface, opts Options) (*Server, error)
 		Level: 5,
 	}))
 
+	svr.engine.GET("/health", func(c echo.Context) error {
+		return c.NoContent(http.StatusOK)
+	})
+
 	svr.engine.GET("/openapi.yaml", func(c echo.Context) error {
 		return c.Blob(http.StatusOK, "application/x-yaml", opts.Spec)
 	})
@@ -86,5 +91,5 @@ func (svr *Server) Run(port int) error {
 }
 
 func (svr *Server) Shutdown() error {
-	return svr.engine.Shutdown(nil)
+	return svr.engine.Shutdown(context.TODO())
 }

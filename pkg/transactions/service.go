@@ -32,6 +32,11 @@ func (s *serviceImpl) CreateTransaction(ctx context.Context, creation Transactio
 	log := zerolog.Ctx(ctx)
 	log.Info().Msg("creating transaction")
 
+	if creation.Amount <= 0 {
+		log.Error().Msg("amount must be greater than zero")
+		return Transaction{}, ErrInvalidAmount
+	}
+
 	amt, err := s.handleOperation(creation.OperationType, creation.Amount)
 
 	if err != nil {

@@ -77,6 +77,8 @@ func TestCreateAccount_Success(t *testing.T) {
 		}
 	}()
 
+	time.Sleep(1 * time.Second)
+
 	defer func() {
 		if err := svr.Shutdown(); err != nil {
 			t.Errorf("shutdown error: %v", err)
@@ -125,6 +127,8 @@ func TestCreateAccount_Error_Validation(t *testing.T) {
 		}
 	}()
 
+	time.Sleep(1 * time.Second)
+
 	defer func() {
 		if err := svr.Shutdown(); err != nil {
 			t.Errorf("shutdown error: %v", err)
@@ -164,6 +168,8 @@ func TestGetAccountByID_Success(t *testing.T) {
 			t.Errorf("server error: %v", err)
 		}
 	}()
+
+	time.Sleep(1 * time.Second)
 
 	defer func() {
 		if err := svr.Shutdown(); err != nil {
@@ -209,6 +215,8 @@ func TestGetAccountByID_Error_NotFound(t *testing.T) {
 		}
 	}()
 
+	time.Sleep(1 * time.Second)
+
 	defer func() {
 		if err := svr.Shutdown(); err != nil {
 			t.Errorf("shutdown error: %v", err)
@@ -252,6 +260,8 @@ func TestGetAccountByID_Error_Validation(t *testing.T) {
 		}
 	}()
 
+	time.Sleep(1 * time.Second)
+
 	defer func() {
 		if err := svr.Shutdown(); err != nil {
 			t.Errorf("shutdown error: %v", err)
@@ -287,6 +297,8 @@ func TestCreateTransaction_Success(t *testing.T) {
 			t.Errorf("server error: %v", err)
 		}
 	}()
+
+	time.Sleep(1 * time.Second)
 
 	defer func() {
 		if err := svr.Shutdown(); err != nil {
@@ -345,6 +357,8 @@ func TestCreateTransaction_Error_AccountIDNotFound(t *testing.T) {
 			t.Errorf("server error: %v", err)
 		}
 	}()
+
+	time.Sleep(1 * time.Second)
 
 	defer func() {
 		if err := svr.Shutdown(); err != nil {
@@ -427,6 +441,8 @@ func TestCreateTransaction_Error_Validation(t *testing.T) {
 			t.Errorf("server error: %v", err)
 		}
 	}()
+
+	time.Sleep(1 * time.Second)
 
 	defer func() {
 		if err := svr.Shutdown(); err != nil {

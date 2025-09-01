@@ -74,6 +74,23 @@ func TestService_CreateTransaction_Success(t *testing.T) {
 	}
 }
 
+func TestService_CreateTransaction_Error_InvalidAmount(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer mockDB.Close()
+	db := dbx.New(mockDB)
+	svc := transactions.NewService(db, database.NewTransactions())
+
+	_, err = svc.CreateTransaction(context.Background(), transactions.TransactionCreation{
+		AccountID:     100,
+		OperationType: transactions.OperationTypePurchase,
+		Amount:        0,
+	})
+
+	assert.ErrorIs(t, err, transactions.ErrInvalidAmount)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
 func TestService_CreateTransaction_Error_InvalidOperation(t *testing.T) {
 	mockDB, mock, err := sqlmock.New()
 	assert.NoError(t, err)

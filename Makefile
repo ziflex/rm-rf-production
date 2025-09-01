@@ -1,10 +1,21 @@
 DIR_BIN = ./bin
-
 APP_NAME = $(shell basename $(PWD))
+OAPI := $(shell go env GOPATH)/bin/oapi-codegen
 
-.PHONY: build install install-tools install-packages test fmt lint start up down
+export GOOS=linux
+export GOARCH=amd64
+
+export DB_PORT ?= 5432
+export DB_NAME ?= mydb
+export DB_USER ?= user
+export DB_PASS ?= password
+
+.PHONY: clean build install install-tools install-packages test fmt lint start up down
 
 default: compile start
+
+clean:
+	rm -rf ${DIR_BIN}/*
 
 build: generate lint test compile
 
@@ -41,7 +52,12 @@ lint:
 	staticcheck ./...
 
 up:
-	docker-compose up -d
+	docker compose up -d --build
+
+refresh:
+	docker compose down && \
+	docker compose build --no-cache && \
+	docker compose up -d --build
 
 down:
-	docker-compose down
+	docker compose down

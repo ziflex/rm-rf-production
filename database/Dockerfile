@@ -1,4 +1,4 @@
-FROM alpine:3.22
+FROM golang:1.24-alpine
 
 WORKDIR database
 
@@ -6,9 +6,8 @@ WORKDIR database
 RUN apk add --no-cache curl ca-certificates
 
 # Download migrate CLI
-RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.0/migrate.linux-amd64.tar.gz \
-    | tar xvz -C /usr/local/bin/ \
-    && chmod +x /usr/local/bin/migrate
+RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
 
 # Copy migration files into the image
 COPY migrations migrations
@@ -17,4 +16,4 @@ COPY migrations migrations
 COPY entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]

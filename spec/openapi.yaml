@@ -3,8 +3,6 @@ info:
   title: rm-rf-production
   description: rm-rf-production
   version: 1.0.0
-servers:
-  - url: 'https'
 paths:
   /accounts:
     post:
@@ -177,8 +175,7 @@ components:
           format: double
           minimum: 0.01
           description: >
-            For PURCHASE/INSTALLMENT PURCHASE/WITHDRAWAL (1..3) amount should be negative.
-            For PAYMENT (4) amount should be positive.
+            Amount should be positive.
           example: 123.45
 
     Transaction:
