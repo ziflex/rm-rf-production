@@ -28,7 +28,8 @@ install-tools:
 	go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
 
 install-packages:
-	go mod download
+	go mod download && \
+	go mod vendor
 
 install: install-tools install-packages
 
@@ -45,6 +46,9 @@ fmt:
 lint:
 	go vet ./... && \
 	staticcheck ./...
+
+migrate:
+	migrate -path ./database/migrations -database "postgres://${DB_USER}:${DB_PASS}@localhost:${DB_PORT}/${DB_NAME}?sslmode=disable" up
 
 up:
 	docker compose up -d --build

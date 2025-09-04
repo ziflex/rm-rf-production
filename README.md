@@ -30,6 +30,13 @@ To shut down:
 make down
 ```
 
+#### How to run locally without Docker
+1. Install dependencies: `make install`
+2. Build the app: `make build`
+3. Start a local Postgres instance (e.g. `docker run -p 5432:5432 -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password -e POSTGRES_DB=mydb -d postgres:15`)
+4. Run migrations: `DB_HOST=localhost DB_PORT=5432 DB_USER=user DB_PASS=password DB_NAME=mydb make migrate`
+5. Start the app: `DB_HOST=localhost DB_PORT=5432 DB_USER=user DB_PASS=password DB_NAME=mydb make start`
+
 ### 2) Explore the API
 - Swagger UI: `http://localhost:8080/docs`
 - OpenAPI spec: `http://localhost:8080/openapi.yaml`
