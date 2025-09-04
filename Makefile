@@ -8,7 +8,7 @@ export DB_PASS ?= password
 
 .PHONY: clean build install install-tools install-packages test fmt lint start up down
 
-default: compile start
+default: install build
 
 clean:
 	rm -rf ${DIR_BIN}/*
