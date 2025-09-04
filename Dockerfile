@@ -9,7 +9,7 @@ WORKDIR /build
 COPY . .
 
 # Build dependencies.
-RUN make install-tools
+RUN make install
 
 # Build code.
 RUN make build
